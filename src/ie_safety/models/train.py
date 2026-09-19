@@ -245,8 +245,9 @@ class Vault:
             "payload": payload or {},
         }
         self.audit_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(self.audit_path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        from ..textio import append_text_lf
+
+        append_text_lf(self.audit_path, json.dumps(rec, ensure_ascii=False) + "\n")
         if rec["previous_unlocks"] > 0:
             logger.warning(
                 "保险箱此前已被打开 %d 次，本次结果不再是无偏估计。", rec["previous_unlocks"]

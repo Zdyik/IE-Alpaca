@@ -211,10 +211,9 @@ def decide_label_scheme(probe: Dict[str, Any], cfg: Config) -> Dict[str, Any]:
 
 def write_decision(decision: Dict[str, Any], path: Path) -> Path:
     """把标签口径决策写入 JSON（含完整探测证据，便于复核）。"""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(decision, f, ensure_ascii=False, indent=2, default=str)
-    return path
+    from ..textio import write_json_lf
+
+    return write_json_lf(path, decision)
 
 
 def load_decision(path: Path) -> Optional[Dict[str, Any]]:

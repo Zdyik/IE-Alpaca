@@ -24,9 +24,11 @@ import logging
 from pathlib import Path
 
 from _common import (
+    write_text_lf,
     find_raw_dir,
     get_config,
     markdown_table,
+    rel_or_abs,
     setup_logging,
     synthetic_notice,
     write_json,
@@ -54,12 +56,13 @@ def _sha256(path: Path, max_bytes: int = 8 * 1024 * 1024) -> str:
 
 def build_manifest(found: dict, cfg) -> dict:
     """记录文件名、大小与哈希，便于复现时核对数据是否同一份。"""
-    manifest = {"datasets": {}, "n_files": 0}
+    manifest = {"data_dir": rel_or_abs(Path(found["profile"][0].path).parent) if found.get("profile") else "",
+                "datasets": {}, "n_files": 0}
     for kind, sources in found.items():
         for s in sources:
             entry = {
                 "kind": kind,
-                "file": s.path.name,
+                "file": rel_or_abs(s.path),
                 "member": s.member,
                 "size_bytes": s.path.stat().st_size,
                 "sha256_head": _sha256(s.path),
@@ -132,7 +135,7 @@ def main(argv=None) -> int:
         synthetic_notice(cfg, raw_dir),
         "## 1. 数据清单",
         "",
-        f"- 原始数据目录：`{raw_dir}`",
+        f"- 原始数据目录：`{rel_or_abs(raw_dir)}`",
         f"- 识别出的数据集：{markdown_table([{'数据集': k, '文件': ', '.join(s.label for s in v)} for k, v in found.items() if k != '?' and v])}",
         "",
         "## 2. 规模与覆盖",
@@ -189,7 +192,7 @@ def main(argv=None) -> int:
 
     docs = cfg.resolve("docs")
     out_path = docs / "01_数据审计.md"
-    out_path.write_text("\n".join(report), encoding="utf-8")
+    write_text_lf(out_path, "\n".join(report))
     logger.info("审计报告已写入 %s", out_path)
     print(f"\n标签口径结论：{decision['scheme']}（{decision['reasons'][0]}）")
     return 0

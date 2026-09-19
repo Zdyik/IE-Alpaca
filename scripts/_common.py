@@ -15,6 +15,7 @@ if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
 from ie_safety.config import Config, load_config  # noqa: E402
+from ie_safety.textio import write_json_lf, write_text_lf  # noqa: E402
 
 LOG_FORMAT = "%(asctime)s %(levelname)-7s %(name)s: %(message)s"
 
@@ -74,11 +75,21 @@ def load_daily_tables(cfg: Config) -> Dict[str, object]:
     return tables
 
 
+def rel_or_abs(p: Path) -> str:
+    """尽量返回相对项目根的路径。
+
+    报告与清单会被提交进公开仓库，写绝对路径既无必要、又泄漏本机目录结构，
+    因此优先转相对路径；不在项目内时才退回绝对路径。
+    """
+    try:
+        return str(Path(p).resolve().relative_to(_ROOT)).replace("\\", "/")
+    except Exception:
+        return str(p)
+
+
 def write_json(path: Path, obj: object) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(obj, f, ensure_ascii=False, indent=2, default=str)
-    return path
+    return write_json_lf(path, obj)
 
 
 def load_json(path: Path) -> Optional[object]:

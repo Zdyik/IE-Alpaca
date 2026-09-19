@@ -1,9 +1,10 @@
 {
+  "data_dir": "data/raw/synthetic",
   "datasets": {
     "profile": [
       {
         "kind": "profile",
-        "file": "vehicle_profile.csv",
+        "file": "data/raw/synthetic/vehicle_profile.csv",
         "member": null,
         "size_bytes": 9026,
         "sha256_head": "320393b7331074ea",
@@ -24,7 +25,7 @@
     "events": [
       {
         "kind": "events",
-        "file": "risk_events.csv",
+        "file": "data/raw/synthetic/risk_events.csv",
         "member": null,
         "size_bytes": 4242613,
         "sha256_head": "e9c459a8ad817390",
@@ -42,7 +43,7 @@
     "trajectory": [
       {
         "kind": "trajectory",
-        "file": "trajectory.csv",
+        "file": "data/raw/synthetic/trajectory.csv",
         "member": null,
         "size_bytes": 23956760,
         "sha256_head": "723f10d4e8380822",
@@ -61,7 +62,7 @@
     "imu": [
       {
         "kind": "imu",
-        "file": "imu.csv",
+        "file": "data/raw/synthetic/imu.csv",
         "member": null,
         "size_bytes": 22598321,
         "sha256_head": "4533946e07fd3835",
@@ -84,7 +85,7 @@
     "?": [
       {
         "kind": "?",
-        "file": "_ground_truth.csv",
+        "file": "data/raw/synthetic/_ground_truth.csv",
         "member": null,
         "size_bytes": 8217,
         "sha256_head": "cfa583bd4b5f875d",

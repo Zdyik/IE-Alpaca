@@ -36,6 +36,7 @@ from _common import (
     markdown_table,
     setup_logging,
     synthetic_notice,
+    write_text_lf,
 )
 
 from ie_safety.features.build import build_features
@@ -144,7 +145,7 @@ def main(argv=None) -> int:
                     ev_summary[spec["name"]] = int(v)
         cards.append(scorecard_markdown(str(gpsno), scores.loc[gpsno], cfg, ev_summary))
     card_path = cfg.resolve("outputs", ensure=True) / "task2_scorecard.md"
-    card_path.write_text("\n---\n\n".join(cards), encoding="utf-8")
+    write_text_lf(card_path, "\n---\n\n".join(cards))
     logger.info("安全卡已写入 %s（%d 张）", card_path, len(cards))
 
     # ------------------------------------------------------------------
@@ -227,10 +228,10 @@ def main(argv=None) -> int:
         "- **这两个文件含车辆级信息，按赛题保密条款不入公开仓库。**",
         "",
     ]
-    (reports / "task2_validation.md").write_text("\n".join(lines), encoding="utf-8")
+    write_text_lf(reports / "task2_validation.md", "\n".join(lines))
 
     playbook = management_playbook(cfg)
-    (cfg.resolve("docs", ensure=True) / "05_运营建议.md").write_text(playbook, encoding="utf-8")
+    write_text_lf(cfg.resolve("docs", ensure=True) / "05_运营建议.md", playbook)
     logger.info("运营建议已写入 docs/05_运营建议.md")
 
     print(f"\n连续风险指数 AUC = {val['auc_continuous_risk_index']:.4f}"

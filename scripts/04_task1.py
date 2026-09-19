@@ -42,6 +42,7 @@ from _common import (
     setup_logging,
     synthetic_notice,
     write_json,
+    write_text_lf,
 )
 
 from ie_safety.features.build import build_features, feature_dictionary
@@ -345,7 +346,7 @@ def _write_reports(cfg, raw_dir, decision, baselines, res, strongest, delta, gat
         "- **该文件含车辆级信息，按赛题保密条款不入公开仓库，只通过官方渠道提交。**",
         "",
     ]
-    (reports / "validation.md").write_text("\n".join(lines), encoding="utf-8")
+    write_text_lf(reports / "validation.md", "\n".join(lines))
 
     # 负对照报告
     nl = ["# 负面对照报告", "", notice,
@@ -373,7 +374,7 @@ def _write_reports(cfg, raw_dir, decision, baselines, res, strongest, delta, gat
             if r.get("interpretation"):
                 nl.append(f"- 解读：{r['interpretation']}")
             nl.append("")
-    (reports / "负面对照报告.md").write_text("\n".join(nl), encoding="utf-8")
+    write_text_lf(reports / "负面对照报告.md", "\n".join(nl))
 
     # 无效清单（预注册 + 未达门槛的改动记录）
     invalid = [
@@ -407,7 +408,7 @@ def _write_reports(cfg, raw_dir, decision, baselines, res, strongest, delta, gat
         "- 模型超参搜索（在 N=500 上搜索超参的收益低于选择偏差风险，刻意不做）",
         "",
     ]
-    (reports / "无效清单.md").write_text("\n".join(invalid), encoding="utf-8")
+    write_text_lf(reports / "无效清单.md", "\n".join(invalid))
 
 
 def _fmt(v) -> str:
