@@ -1,0 +1,51 @@
+﻿group,feature,description,time_source
+G1 暴露量,km,窗口内总里程（轨迹 distance 累加）,特征窗口
+G1 暴露量,hours,窗口内总行驶时长（轨迹 run_time 累加）,特征窗口
+G1 暴露量,active_days,窗口内有轨迹数据的天数,特征窗口
+G1 暴露量,km_per_active_day,日均里程,特征窗口
+G1 暴露量,night_km_share,夜间里程占比（轨迹实算）,特征窗口
+G1 暴露量,highway_km_share,高速里程占比（轨迹速度阈值近似）,特征窗口
+G1 暴露量,speed_mean / speed_max,速度均值与窗口内最高速度,特征窗口
+G1 暴露量,profile_*,车辆画像近半年月均值（长期行为基准）,画像（半年，早于窗口）
+G1 暴露量,km_vs_profile_ratio,轨迹里程 / 画像月均里程（暴露量交叉校验）,特征窗口
+G2 事件速率,count_ultra,超高危（事故/未遂） 事件计数（仅窗口内）,特征窗口
+G2 事件速率,rate_per_1kkm_ultra,超高危（事故/未遂） 每千公里事件率（暴露量归一化）,特征窗口
+G2 事件速率,rate_per_100h_ultra,超高危（事故/未遂） 每百小时事件率,特征窗口
+G2 事件速率,share_ultra,超高危（事故/未遂） 占全部事件的比例,特征窗口
+G2 事件速率,count_collision,碰撞与跟车 事件计数（仅窗口内）,特征窗口
+G2 事件速率,rate_per_1kkm_collision,碰撞与跟车 每千公里事件率（暴露量归一化）,特征窗口
+G2 事件速率,rate_per_100h_collision,碰撞与跟车 每百小时事件率,特征窗口
+G2 事件速率,share_collision,碰撞与跟车 占全部事件的比例,特征窗口
+G2 事件速率,count_speed,超速 事件计数（仅窗口内）,特征窗口
+G2 事件速率,rate_per_1kkm_speed,超速 每千公里事件率（暴露量归一化）,特征窗口
+G2 事件速率,rate_per_100h_speed,超速 每百小时事件率,特征窗口
+G2 事件速率,share_speed,超速 占全部事件的比例,特征窗口
+G2 事件速率,count_fatigue,疲劳 事件计数（仅窗口内）,特征窗口
+G2 事件速率,rate_per_1kkm_fatigue,疲劳 每千公里事件率（暴露量归一化）,特征窗口
+G2 事件速率,rate_per_100h_fatigue,疲劳 每百小时事件率,特征窗口
+G2 事件速率,share_fatigue,疲劳 占全部事件的比例,特征窗口
+G2 事件速率,count_distraction,分心 事件计数（仅窗口内）,特征窗口
+G2 事件速率,rate_per_1kkm_distraction,分心 每千公里事件率（暴露量归一化）,特征窗口
+G2 事件速率,rate_per_100h_distraction,分心 每百小时事件率,特征窗口
+G2 事件速率,share_distraction,分心 占全部事件的比例,特征窗口
+G2 事件速率,count_blindspot,盲区 事件计数（仅窗口内）,特征窗口
+G2 事件速率,rate_per_1kkm_blindspot,盲区 每千公里事件率（暴露量归一化）,特征窗口
+G2 事件速率,rate_per_100h_blindspot,盲区 每百小时事件率,特征窗口
+G2 事件速率,share_blindspot,盲区 占全部事件的比例,特征窗口
+G2 事件速率,severity_total / rate_severity_per_1kkm,严重度加权总分与其速率,特征窗口
+G3 时间结构,night_event_share,夜间事件占比,特征窗口
+G3 时间结构,dawn_event_share,凌晨 0-5 点事件占比,特征窗口
+G3 时间结构,weekend_event_share,周末事件占比,特征窗口
+G4 趋势与集中度,log_rate_ratio_late_early,后半段 vs 前半段事件数对数比,特征窗口
+G4 趋势与集中度,weekly_rate_slope,周粒度事件数归一化斜率,特征窗口
+G4 趋势与集中度,max_day_share,单日最大事件数占比,特征窗口
+G4 趋势与集中度,day_gini,日粒度事件数 Gini（区分偶发与慢性）,特征窗口
+G5 高危 recency,count_code_11803,窗口内事故计数,特征窗口
+G5 高危 recency,count_code_11804,窗口内未遂事故计数,特征窗口
+G5 高危 recency,days_since_last_ultra,距最近一次超高危事件的天数,特征窗口
+G5 高危 recency,has_ultra_in_window,窗口内是否出现过高危事件,特征窗口
+G6 覆盖与删失,compliance_count / compliance_share,摄像头遮挡与角度异常（设备可见性）,特征窗口
+G6 覆盖与删失,trajectory_days / trajectory_coverage_ratio,轨迹覆盖天数与覆盖率,特征窗口
+G6 覆盖与删失,event_days,有事件记录的天数,特征窗口
+G6 覆盖与删失,low_coverage_flag,轨迹覆盖不足标记（防「沉默即安全」）,特征窗口
+G6 覆盖与删失,has_imu,窗口内是否有 IMU 数据（缺失保持 NaN，不填 0）,特征窗口
