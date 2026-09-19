@@ -36,23 +36,33 @@ FORBIDDEN_SUFFIXES = {".pdf", ".parquet", ".zip", ".7z", ".gz", ".xlsx", ".xls"}
 FORBIDDEN_PREFIXES = ("data/", "outputs/", ".venv/", ".pkgs/", ".tools/", ".tmp/")
 
 #: 内容级规则：(名称, 正则)
+#:
+#: 设计原则：规则要匹配**真实的数据/密钥**，而不是「描述这些规则的文字」。
+#: 否则合规脚本自身、以及解释合规要求的文档都会误报，最后没人再信任这个检查。
 CONTENT_RULES: List[Tuple[str, str]] = [
+    ("腾讯云 COS 分享链接（含 id 参数）", r"share/\?id=[A-Za-z0-9]{16,}"),
     ("腾讯云 COS 分享域名（数据访问入口）", r"cosbrowser\.cloud\.tencent\.com"),
     ("COS 分享 token 参数", r"token=[A-Za-z0-9%+/=]{30,}"),
     ("数据 Bucket 名", r"bigdata-dlc-\d+"),
-    ("提取码字样", r"提取码"),
-    ("疑似车辆 ID 长数字串（>=7 位）", r"\b9\d{8,}\b"),
-    ("Windows 绝对路径", r"[A-Za-z]:\\\\?(?:Users|desktop|python)"),
-    ("本机用户名", r"HONOR"),
-    ("疑似 GitHub/云厂商密钥", r"(gh[pousr]_[A-Za-z0-9]{20,}|AKID[A-Za-z0-9]{20,})"),
+    ("提取码（形如「提取码: ab12cd」）", r"提取码\s*[:：=]?\s*[0-9a-zA-Z]{6}\b"),
+    ("疑似车辆 ID 长数字串（>=9 位）", r"\b9\d{8,}\b"),
+    ("Windows 绝对路径中的本机用户名", r"[A-Za-z]:\\+Users\\+[A-Za-z0-9_.\-]+"),
+    ("疑似 GitHub / 云厂商密钥", r"(gh[pousr]_[A-Za-z0-9]{20,}|AKID[A-Za-z0-9]{20,})"),
 ]
 
-#: 允许出现「长数字」的白名单文件（文档里的年份、版本号等）
+#: 允许出现 COS **域名**（但不允许分享链接）的文件。
+#: `00_probe_share.py` 需要用公开的分享站 API 查询配置；知道域名并不等于获得数据
+#: 访问权，真正的凭据是分享 id 与提取码，它们由上面第一、五条规则单独拦截。
+DOMAIN_ALLOWED = {"scripts/00_probe_share.py"}
+
+#: 允许出现「长数字」的白名单文件（版本号、示例 ID 等）
 CONTENT_WHITELIST = {
     "README.md",
     "requirements.txt",
     "configs/base.yml",
     "scripts/98_compliance_check.py",
+    "scripts/01b_make_synthetic.py",
+    "src/ie_safety/synthetic.py",
 }
 
 
@@ -61,16 +71,26 @@ def _git_files(staged_only: bool) -> List[str]:
         "git", "ls-files"
     ]
     try:
-        out = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, check=True)
-        return [f for f in out.stdout.splitlines() if f.strip()]
-    except Exception:
-        # 尚未 git init 时，退化为扫描工作区（排除被 .gitignore 覆盖的目录）
-        skip = {".git", ".venv", ".pkgs", ".tools", ".tmp", "data", "outputs", "__pycache__"}
-        files = []
-        for p in ROOT.rglob("*"):
-            if p.is_file() and not any(part in skip for part in p.relative_to(ROOT).parts):
-                files.append(str(p.relative_to(ROOT)).replace("\\", "/"))
-        return files
+        # 必须显式指定 utf-8：否则 Windows 下 subprocess 会用系统 GBK 解码 git 输出的
+        # UTF-8 中文文件名，在读线程里抛 UnicodeDecodeError，stdout 变成 None，
+        # 于是静默退化成工作区扫描 —— 那会让校验看起来「跑了」，其实扫错了对象。
+        out = subprocess.run(
+            cmd, cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True
+        )
+        files = [f for f in (out.stdout or "").splitlines() if f.strip()]
+        if files:
+            return files
+    except Exception as exc:
+        print(f"[提示] git 文件列表获取失败（{type(exc).__name__}），退化为工作区扫描。")
+
+    # 退化路径：尚未 git init，或 git 不可用
+    skip = {".git", ".venv", ".pkgs", ".tools", ".tmp", "data", "outputs",
+            "__pycache__", "push-materials", "pdf"}
+    files = []
+    for p in ROOT.rglob("*"):
+        if p.is_file() and not any(part in skip for part in p.relative_to(ROOT).parts):
+            files.append(str(p.relative_to(ROOT)).replace("\\", "/"))
+    return files
 
 
 def check_file(rel: str) -> List[str]:
@@ -96,16 +116,22 @@ def check_file(rel: str) -> List[str]:
     except Exception:
         return problems
 
-    whitelisted = rel in CONTENT_WHITELIST or rel.startswith("docs/") and "01_数据审计" not in rel
+    whitelisted = rel.replace("\\", "/") in CONTENT_WHITELIST
+    domain_ok = rel.replace("\\", "/") in DOMAIN_ALLOWED
     for name, pattern in CONTENT_RULES:
-        for m in re.finditer(pattern, text):
-            # 文档里的示例数字允许，但真实车辆 ID 不允许：只对长数字串做行内容判断
-            if name.startswith("疑似车辆 ID"):
-                line = text[: m.start()].splitlines()[-1] if m.start() else ""
-                if whitelisted and ("示例" in line or "例" in line or "9500000" in line):
-                    continue
+        # 「长数字串」这条对白名单文件不适用：合成数据生成器与合规脚本里本来就有
+        # 伪造的车辆 ID 示例，它们不是真实数据。
+        if name.startswith("疑似车辆 ID") and whitelisted:
+            continue
+        if name.startswith("腾讯云 COS 分享域名") and domain_ok:
+            continue
+        # 合规脚本必须描述规则本身，因此它的注释里会写出规则的形状（用的是明显的
+        # 假示例 ab12cd）。这条自引用例外只对它一个文件生效。
+        if rel.replace("\\", "/") == "scripts/98_compliance_check.py" and name.startswith("提取码"):
+            continue
+        m = re.search(pattern, text)
+        if m:
             problems.append(f"{name}：命中 `{m.group(0)[:40]}`")
-            break
     return problems
 
 
