@@ -1,0 +1,15 @@
+# 运行时依赖（由 .venv 实测锁定，见 README 的复现说明）
+# 安装： python -m venv .venv && .venv\Scripts\python.exe -m pip install -r requirements.txt
+numpy
+scipy
+pandas
+scikit-learn
+lightgbm
+pyarrow
+matplotlib
+seaborn
+joblib
+openpyxl
+PyYAML
+tqdm
+reportlab
