@@ -1,0 +1,12 @@
+# 统一换行符，避免 Windows / Linux 协作时出现整文件级 diff。
+# 本项目主要在 Windows 上开发，但赛题评审环境可能是 Linux，因此源码统一 LF，
+# 只有 PowerShell 与批处理脚本保留 CRLF（否则 Windows 下无法直接执行）。
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# 二进制（本仓库不应出现，此处是兜底）
+*.png binary
+*.jpg binary
+*.pdf binary
+*.parquet binary

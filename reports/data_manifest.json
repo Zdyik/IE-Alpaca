@@ -1,0 +1,107 @@
+{
+  "data_dir": "data/raw/synthetic",
+  "datasets": {
+    "profile": [
+      {
+        "kind": "profile",
+        "file": "data/raw/synthetic/vehicle_profile.csv",
+        "member": null,
+        "size_bytes": 9026,
+        "sha256_head": "320393b7331074ea",
+        "columns_detected": [
+          "gpsno",
+          "能源类型",
+          "月均行驶里程",
+          "月均行驶时长",
+          "月平均停留次数",
+          "高速里程占比",
+          "早晨行驶时长占比",
+          "黄昏行驶时长占比",
+          "夜间里程占比",
+          "夜间行驶时长占比"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "kind": "events",
+        "file": "data/raw/synthetic/risk_events.csv",
+        "member": null,
+        "size_bytes": 4242613,
+        "sha256_head": "e9c459a8ad817390",
+        "columns_detected": [
+          "gpsno",
+          "lat",
+          "lng",
+          "event_type",
+          "event_name",
+          "speed",
+          "start_time"
+        ]
+      }
+    ],
+    "trajectory": [
+      {
+        "kind": "trajectory",
+        "file": "data/raw/synthetic/trajectory.csv",
+        "member": null,
+        "size_bytes": 23956760,
+        "sha256_head": "723f10d4e8380822",
+        "columns_detected": [
+          "gpsno",
+          "distance",
+          "run_time",
+          "trigger_time",
+          "speed",
+          "course",
+          "lat",
+          "lng"
+        ]
+      }
+    ],
+    "imu": [
+      {
+        "kind": "imu",
+        "file": "data/raw/synthetic/imu.csv",
+        "member": null,
+        "size_bytes": 22598321,
+        "sha256_head": "4533946e07fd3835",
+        "columns_detected": [
+          "gpsno",
+          "imei",
+          "data_time",
+          "data_date",
+          "ems_speed",
+          "gps_speed",
+          "accel_x_raw",
+          "accel_y_raw",
+          "accel_z_raw",
+          "gyro_x_raw",
+          "gyro_y_raw",
+          "gyro_z_raw"
+        ]
+      }
+    ],
+    "?": [
+      {
+        "kind": "?",
+        "file": "data/raw/synthetic/_ground_truth.csv",
+        "member": null,
+        "size_bytes": 8217,
+        "sha256_head": "cfa583bd4b5f875d",
+        "columns_detected": [
+          "gpsno",
+          "latent_z",
+          "risk_multiplier",
+          "true_daily_km"
+        ]
+      }
+    ]
+  },
+  "n_files": 5,
+  "observation": {
+    "start": "2026-06-01",
+    "end": "2026-07-30",
+    "days": 60
+  }
+}

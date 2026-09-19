@@ -1,0 +1,25 @@
+{
+  "n_checks": 1,
+  "n_passed": 1,
+  "n_failed": 0,
+  "failed_checks": [],
+  "results": [
+    {
+      "check": "event_family_frequency_order",
+      "passed": true,
+      "family_counts": {
+        "ultra": 507,
+        "collision": 2907,
+        "speed": 8997,
+        "fatigue": 20144,
+        "distraction": 13282,
+        "blindspot": 1040
+      },
+      "ordering_desc": "疲劳(20144) > 分心(13282) > 超速(8997) > 碰撞与跟车(2907) > 盲区(1040) > 超高危（事故/未遂）(507)",
+      "total_events": 46877,
+      "expected_relation": "['fatigue', 'distraction', 'speed'] >> ['ultra']",
+      "violations": [],
+      "interpretation": "序关系成立，事件数据与领域预期一致。"
+    }
+  ]
+}

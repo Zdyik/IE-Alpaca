@@ -1,0 +1,200 @@
+# =============================================================================
+# IE-Alpaca 驾驶安全赛题 · 统一配置
+#
+# 设计原则：标签口径在第 1 天数据审计后才会最终确定，因此窗口长度、标签事件码、
+# 事件族、模型超参全部在此配置。口径变更只改本文件，不改代码。
+# =============================================================================
+
+project:
+  name: ie-safety
+  seed: 42
+  timezone: Asia/Shanghai
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  outputs: outputs
+  reports: reports
+  docs: docs
+  figures: reports/figures
+
+data:
+  vehicles_expected: 500
+  # 观测期。审计脚本会用真实数据回填并校验，此处为赛题说明给出的范围。
+  observation_start: "2026-06-01"
+  observation_end: "2026-07-30"
+  observation_days: 60
+
+# -----------------------------------------------------------------------------
+# 时间切分：赛题给出的观测期只有 60 天，而前瞻期为 40 天，故 60 = 20 + 40。
+# 训练时用「前 feature_days 天」作特征窗口、「其后 outcome_days 天」作结果窗口，
+# 标签 = 结果窗口内是否出现事故或未遂事故。这样构造出的监督信号与赛方要求的
+# 40 天前瞻期对齐。
+# -----------------------------------------------------------------------------
+windowing:
+  feature_days: 20
+  outcome_days: 40
+  # 开发期使用的多起点（样本增广）：特征窗口 = 前 t 天，结果窗口 = 第 t+1..t+40 天。
+  # 只要 t <= 观测期 - outcome_days 即可保证结果窗口落在观测期内。
+  dev_origins: [5, 10, 15]
+  # 保险箱：全程锁死，只在最终评估时开一次。
+  # 若不锁定，跑 N 组实验取最好会让 CV AUC 期望虚高约 0.03(N=5) ~ 0.08(N=200)。
+  vault_origin: 20
+
+labels:
+  # 超高危事件即监督信号来源
+  accident_codes: [11803]
+  near_miss_codes: [11804]
+  include_near_miss: true
+  # 降级方案：当日志中事故+未遂事故过于稀疏、无法支撑监督时启用的代理标签。
+  # 是否启用由审计脚本的结论决定（见 audit/label_decision.json）。
+  proxy_extra_codes: [30000]
+  proxy_enabled: false
+
+# -----------------------------------------------------------------------------
+# 事件族：一族 = 一组语义相近的事件码。
+# 注意：族之间**不做互斥假设**（出题方参考文档明确提示风险触发不互斥）。
+# 合规类事件单列，因为它们是「删失/可见性」指标，不是风险行为本身。
+# -----------------------------------------------------------------------------
+event_families:
+  ultra:
+    name: 超高危（事故/未遂）
+    codes: [11803, 11804]
+  collision:
+    name: 碰撞与跟车
+    codes: [30000, 30005, 30017, 30002, 30003]
+  speed:
+    name: 超速
+    codes: [11401, 11402, 11403, 11405, 11406]
+  fatigue:
+    name: 疲劳
+    codes: [41001, 41029, 41002, 41009]
+  distraction:
+    name: 分心
+    codes: [41003, 41004, 41023, 41005]
+  blindspot:
+    name: 盲区
+    codes: [60292, 60294]
+
+compliance:
+  name: 合规与设备可见性
+  codes: [41006, 41021]
+
+# 事件码中文名与严重度权重。
+# 权重是**专家先验**，不是从数据拟合的；审计阶段会用频次序关系与符号约定校验
+# （见 audit/anchors.py），任务二的权重则改由线性模型从数据估计。
+code_catalog:
+  11803: {name: 事故, weight: 10.0}
+  11804: {name: 未遂事故, weight: 8.0}
+  30000: {name: 前碰撞预警, weight: 5.0}
+  30005: {name: 车距过近, weight: 2.5}
+  30017: {name: 长时间压线, weight: 2.0}
+  30002: {name: 左车道偏移, weight: 2.0}
+  30003: {name: 右车道偏移, weight: 2.0}
+  11401: {name: 路口超速, weight: 3.0}
+  11402: {name: 主路弯道超速, weight: 3.0}
+  11403: {name: 危险路段超速报警, weight: 2.5}
+  11405: {name: 匝道超速, weight: 2.5}
+  11406: {name: 高速长下坡超速, weight: 4.0}
+  41001: {name: 疲劳(闭眼), weight: 5.0}
+  41029: {name: 困倦, weight: 5.0}
+  41002: {name: 打哈欠, weight: 1.5}
+  41009: {name: 频繁低头, weight: 3.0}
+  41003: {name: 注意力分散, weight: 3.5}
+  41004: {name: 打电话, weight: 4.0}
+  41023: {name: 看手机, weight: 5.0}
+  41005: {name: 抽烟, weight: 1.5}
+  60292: {name: 后盲区报警, weight: 1.5}
+  60294: {name: 右盲区报警, weight: 1.5}
+  41006: {name: 摄像头遮挡, weight: 0.0}
+  41021: {name: 摄像头角度扭转, weight: 0.0}
+
+# 暴露量归一化的分母。赛事数据中计数与里程天然正相关，直接用计数会让模型
+# 退化成「里程预测器」，因此所有风险特征主轴一律转成速率。
+exposure:
+  per_km: 1000.0     # 每千公里事件率
+  per_hour: 100.0    # 每百小时事件率
+  # 轨迹数据 distance 单位为厘米
+  distance_unit_divisor: 100000.0
+  # 轨迹速度阈值（km/h）：用于近似切分高速/非高速
+  highway_speed_threshold: 80
+
+# 时间结构
+temporal:
+  night_hours: [22, 23, 0, 1, 2, 3, 4, 5]
+  dawn_hours: [0, 1, 2, 3, 4, 5]
+  weekend_days: [5, 6]   # Python weekday(): 周一=0
+
+# 覆盖度/删失：防止「设备被遮挡或离线 = 事件少 = 被判低风险」这种沉默即安全
+censoring:
+  min_trajectory_days: 5
+  min_event_days: 1
+
+validation:
+  n_splits: 5
+  n_repeats: 10
+  auc_ci_bootstrap: 1000
+  # 效应量门槛：N=500 且正例率约 20% 时 SE(AUC)≈0.031，
+  # 因此 ΔAUC 小于该阈值一律按噪声处理，不作为「改动有效」的依据。
+  min_effect_delta_auc: 0.04
+  max_comparisons: 20
+
+models:
+  logistic:
+    C: 1.0
+    penalty: l2
+    max_iter: 5000
+    class_weight: null   # 不用 class_weight 调「准」：AUC 与阈值无关，调权重只破坏校准
+  lightgbm:
+    n_estimators: 400
+    learning_rate: 0.03
+    num_leaves: 12
+    min_child_samples: 25
+    subsample: 0.8
+    subsample_freq: 1
+    colsample_bytree: 0.6
+    reg_alpha: 0.5
+    reg_lambda: 1.0
+    max_depth: 3
+  ensemble:
+    # AUC 只关心序，rank 平均比概率平均更稳健
+    method: rank_mean
+    weights: {logistic: 0.5, lightgbm: 0.5}
+
+calibration:
+  method: platt      # 500 行样本上 isotonic 易过拟合
+  cv: 5
+
+scoring:
+  # 任务二：可加性线性分解 + 车队分位数标定
+  dimensions:
+    ultra: 超高危行为
+    fatigue: 疲劳风险
+    distraction: 分心风险
+    speed: 激进与超速
+    compliance: 合规与设备管理
+  bands:
+    A: {min: 85, action: 保持，纳入正向激励}
+    B: {min: 70, action: 例行提醒，月度安全简报}
+    C: {min: 55, action: 纳入重点跟车名单，两周一次一对一}
+    D: {min: 0,  action: 立即停驾复训，安全员跟车考核}
+  ewma:
+    halflife_days: 7
+  # 连续风险指数必须一并上报：分档评分只有几档，AUC 公式中并列计 0.5，
+  # 若正负样本对并列比例 f 达 0.3，AUC 上限会被压到 1-0.5*0.3=0.85。
+  tie_rate_max_allowed: 0.2
+
+audit:
+  # 频次序关系锚点（无需标签即可校验特征抽取是否正确）
+  frequency_order:
+    higher: [fatigue, distraction, speed]
+    lower: [ultra]
+  # IMU 事件频次量级锚点（出题方参考文档，每 100 车每月）
+  imu_magnitude_per_100_vehicles_month:
+    harsh_brake: [1000, 100000]
+    harsh_accel: [1000, 100000]
+    sharp_turn: [100, 10000]
+    sudden_swerve: [100, 10000]
+    suspected_crash: [0, 100]
+    suspected_rollover: [0, 10]
