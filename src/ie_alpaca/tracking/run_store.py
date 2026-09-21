@@ -43,14 +43,17 @@ def _git(repo: Path, *args: str) -> str | None:
         return None
 
 
-def create_run(repo: Path, results_root: Path, config_path: Path, config: dict) -> tuple[Path, dict]:
+def create_run(
+    repo: Path, results_root: Path, config_path: Path, config: dict,
+    *, version: str = "V1", entrypoint: str = "train_v1.py",
+) -> tuple[Path, dict]:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-    run_id = f"V1_{stamp}_{uuid.uuid4().hex[:8]}"
+    run_id = f"{version}_{stamp}_{uuid.uuid4().hex[:8]}"
     run_dir = results_root / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
     for name in ("source", "predictions", "models", "logs"):
         (run_dir / name).mkdir()
-    files = [repo / "train_v1.py", repo / "preprocess.py", repo / "requirements.txt", config_path]
+    files = [repo / entrypoint, repo / "preprocess.py", repo / "requirements.txt", config_path]
     files.extend(sorted((repo / "src" / "ie_alpaca").rglob("*.py")))
     source_hashes = {}
     for path in files:
@@ -110,7 +113,7 @@ def update_leaderboard(results_root: Path) -> None:
         rows.append({
             "run_id": manifest["run_id"],
             "created_utc": manifest["created_utc"],
-            "model": "catboost_v1",
+            "model": manifest.get("model", "catboost_v1"),
             "split_version": manifest["split_version"],
             "data_fingerprint": manifest["data_fingerprint"],
             "evaluation_version": manifest["evaluation_version"],

@@ -31,7 +31,7 @@ def score_binary(labels, probabilities, threshold: float = 0.5) -> dict:
         "accuracy_at_0_5": float(accuracy_score(y, p >= 0.5)),
         "accuracy_at_selected_threshold": float(accuracy_score(y, pred)),
         "selected_threshold": float(threshold),
-        "threshold_rule": "fixed_0.5_v1",
+        "threshold_rule": "fixed_0.5",
         "recall": float(recall_score(y, pred, zero_division=0)),
         "specificity": float(tn / (tn + fp)) if tn + fp else None,
         "f1": float(f1_score(y, pred, zero_division=0)),

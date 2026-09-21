@@ -1,0 +1,12 @@
+{
+  "name": "v3_model0_landmark_logistic",
+  "hypothesis": "固定 landmark 的线性 next-event hazard 已可从历史状态推断事故风险",
+  "parent_run_id": null,
+  "seed": 2026,
+  "folds": 5,
+  "holdout_fraction": 0.2,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "C": 0.1,
+  "l1_ratio": 0.2,
+  "threshold": 0.5
+}

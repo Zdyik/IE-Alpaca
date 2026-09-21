@@ -1,0 +1,19 @@
+{
+  "name": "v2_60day_temporal_multihorizon",
+  "hypothesis": "完整60天训练车序列的遮蔽预训练和多预测期监督，能让轻量时序网络学到可迁移的驾驶风险表示",
+  "parent_run_id": "V1_20260921_112800_71fbec41",
+  "seed": 2026,
+  "folds": 5,
+  "holdout_fraction": 0.2,
+  "model": {
+    "device": "auto",
+    "hidden": 24,
+    "dropout": 0.15,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "batch_size": 64,
+    "pretrain_epochs": 5,
+    "train_epochs": 35,
+    "event_dropout": 0.15
+  }
+}
