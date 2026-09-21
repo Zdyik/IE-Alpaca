@@ -1,0 +1,10 @@
+__pycache__/
+output/
+*.duckdb
+*.duckdb.wal
+.pytest_cache/
+.ipynb_checkpoints/
+/data/
+/artifacts/
+/runs/
+/submissions/

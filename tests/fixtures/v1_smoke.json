@@ -1,0 +1,18 @@
+{
+  "name": "test_only_v1_smoke",
+  "hypothesis": "合成数据链路检查，不代表比赛成绩",
+  "parent_run_id": null,
+  "seed": 2026,
+  "lookback_days": 20,
+  "holdout_fraction": 0.2,
+  "folds": 2,
+  "model": {
+    "iterations": 12,
+    "depth": 2,
+    "learning_rate": 0.1,
+    "l2_leaf_reg": 4.0,
+    "thread_count": 2,
+    "device": "cpu",
+    "gpu_devices": "0"
+  }
+}
