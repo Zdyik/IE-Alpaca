@@ -1,0 +1,19 @@
+{
+  "name": "v4_all_events_counts_and_episodes_hazard",
+  "hypothesis": "全部24类事件的可学习相对权重比统一事件权重更能预测后续事故风险",
+  "parent_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2026,
+  "folds": 5,
+  "holdout_fraction": 0.2,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "model": {
+    "device": "auto",
+    "epochs": 30,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "dropout": 0.1,
+    "type_penalty": 0.02
+  },
+  "threshold": 0.5
+}

@@ -1,0 +1,28 @@
+{
+  "name": "v6_width_large",
+  "hypothesis": "Increasing only the shared event and context hidden widths from 8/16 to 32/64 improves vehicle-level generalization",
+  "parent_run_id": "V5_20260922_103523_4d54176d",
+  "v3_reference_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2026,
+  "folds": 5,
+  "holdout_fraction": 0.2,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "model": {
+    "device": "auto",
+    "event_hidden": 32,
+    "context_hidden": 64,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "dropout": 0.1,
+    "type_penalty": 0.02
+  },
+  "selection": {
+    "validation_fraction": 0.2,
+    "max_epochs": 100,
+    "min_epochs": 30,
+    "patience": 12,
+    "min_delta": 0.0
+  },
+  "threshold": 0.5
+}
