@@ -1,0 +1,13 @@
+{
+  "name": "v9e0_causal_feature_ablation",
+  "hypothesis": "事件角色、同日共现和有方向的风险链在固定 V3 风险模型上提供可重复的增量信号",
+  "parent_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2026,
+  "folds": 5,
+  "holdout_fraction": 0.2,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "C": 0.1,
+  "l1_ratio": 0.2,
+  "threshold": 0.5,
+  "primary_variant": "e0d_directed_chains"
+}
