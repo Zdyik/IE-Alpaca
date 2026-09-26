@@ -1,0 +1,22 @@
+{
+  "name": "v11_masked_seed2027_replication",
+  "hypothesis": "Masked相对Scratch的提升不依赖2026单次随机初始化",
+  "run_prefix": "V11M27",
+  "v10_reference_run_id": "V10S2_20260923_151111_fc2709b4",
+  "v3_reference_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2027,
+  "split_seed": 2026,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "methods": ["scratch", "masked"],
+  "model": {
+    "device": "auto", "cpu_threads": 4, "width": 32, "dropout": 0.10,
+    "ssl_batch_size": 64, "ssl_learning_rate": 0.0003, "ssl_weight_decay": 0.001,
+    "ssl_min_steps": 500, "ssl_max_steps": 1000, "ssl_check_every": 100,
+    "temperature": 0.2, "jepa_horizons": [3, 7, 14],
+    "inner_validation_fraction": 0.18, "probe_epochs": 10,
+    "min_finetune_epochs": 15, "max_finetune_epochs": 60,
+    "finetune_patience": 10, "min_delta": 0.0001, "finetune_batch_size": 512,
+    "encoder_learning_rate": 0.0001, "head_learning_rate": 0.001,
+    "weight_decay": 0.001, "auxiliary_weight": 0.10
+  }
+}

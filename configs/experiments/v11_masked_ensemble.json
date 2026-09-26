@@ -1,0 +1,12 @@
+{
+  "name": "v11_masked_three_seed_probability_ensemble",
+  "run_prefix": "V11ENS",
+  "seed": 2026,
+  "member_run_ids": [
+    "V11S1_20260926_074402_79cd7279",
+    "V11M27_20260926_083511_3f2f09aa",
+    "V11M28_20260926_084851_8c459bab"
+  ],
+  "v10_reference_run_id": "V10S2_20260923_151111_fc2709b4",
+  "v3_reference_run_id": "V3M0_20260921_155138_475c1ea1"
+}
