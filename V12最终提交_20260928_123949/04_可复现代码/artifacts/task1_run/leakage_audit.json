@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "unit": "gpsno",
+  "development_vehicles": 382,
+  "locked_vehicles": 96,
+  "locked_labels_used_in_fit_or_metrics": false,
+  "validation_appears_once": true,
+  "folds": [
+    {
+      "fold": 0,
+      "train_vehicles": 305,
+      "validation_vehicles": 77,
+      "overlap": 0
+    },
+    {
+      "fold": 1,
+      "train_vehicles": 305,
+      "validation_vehicles": 77,
+      "overlap": 0
+    },
+    {
+      "fold": 2,
+      "train_vehicles": 306,
+      "validation_vehicles": 76,
+      "overlap": 0
+    },
+    {
+      "fold": 3,
+      "train_vehicles": 306,
+      "validation_vehicles": 76,
+      "overlap": 0
+    },
+    {
+      "fold": 4,
+      "train_vehicles": 306,
+      "validation_vehicles": 76,
+      "overlap": 0
+    }
+  ],
+  "reference_input_start": "2026-06-01",
+  "reference_input_end": "2026-06-20",
+  "reference_label_start": "2026-06-21",
+  "reference_label_end": "2026-07-30",
+  "parent_run_id": "V12_20260927_134415_d7b62f3f",
+  "selected_method": "state_mae",
+  "selection_reason": "Dynamics相对State-MAE仅+0.000927且配对区间跨0；HRC未超过Dynamics。按预注册停止规则保留更简单的State-MAE。",
+  "locked_holdout_scored": false,
+  "future_days_visible_to_anchor": false
+}

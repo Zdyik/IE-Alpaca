@@ -1,0 +1,55 @@
+{
+  "status": "passed",
+  "validated_utc": "2026-09-28T04:39:55.828739+00:00",
+  "task1_run_id": "V12FINAL_20260928_005652_c09b822a",
+  "task2_run_id": "T2V12_20260928_013606_f66a4b6f",
+  "official_files": {
+    "task1": "01_任务一预测结果/task1_predictions.csv",
+    "task2": "02_任务二安全评价/task2_safety_scores.csv",
+    "model_report": "03_算法与模型说明/V12算法与模型说明_任务一与任务二.pdf",
+    "source": "04_可复现代码"
+  },
+  "vehicles": 500,
+  "task1_probability_range": [
+    0.0505161938234781,
+    0.98657700850314
+  ],
+  "task1_positive_predictions": 221,
+  "task2_score_range": [
+    5.2466,
+    92.5023
+  ],
+  "reproduction": {
+    "status": "passed",
+    "vehicles": 500,
+    "task1_max_probability_error": 4.996003610813204e-16,
+    "task2_max_score_error": 0.0,
+    "task2_max_deduction_error": 0.0,
+    "task2_history_max_score_error": 0.0
+  },
+  "pdfs": {
+    "任务一事故风险预测模型说明.pdf": {
+      "pages": 5,
+      "text_chars": 3687
+    },
+    "任务二司机安全评价模型说明.pdf": {
+      "pages": 6,
+      "text_chars": 4264
+    },
+    "V12算法与模型说明_任务一与任务二.pdf": {
+      "pages": 12,
+      "text_chars": 8146
+    }
+  },
+  "raw_competition_data_included": false,
+  "external_data_used": false,
+  "checks": [
+    "two official CSV files contain the same 500 unique vehicle IDs",
+    "task-one probabilities are in [0,1] and classes equal probability >= 0.5",
+    "task-two safety scores are in [0,100]",
+    "provided V12 checkpoint reproduced both tasks vehicle by vehicle",
+    "combined and separate PDFs contain extractable text and valid page counts",
+    "source bundle includes preprocessing, training, inference, scoring and run instructions",
+    "no raw parquet or spreadsheet data was copied into the submission folder"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "v12_end_to_end_smoke",
+  "hypothesis": "V12全链路接口与归档可执行",
+  "run_prefix": "V12SMOKE",
+  "v11_reference_run_id": "V11ENS_20260926_090415_be888624",
+  "v3_reference_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2026,
+  "split_seed": 2026,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "methods": ["state_mae", "dynamics", "hrc"],
+  "model": {
+    "device": "auto",
+    "cpu_threads": 4,
+    "width": 16,
+    "dropout": 0.10,
+    "ssl_batch_size": 16,
+    "ssl_steps": 2,
+    "ssl_check_every": 1,
+    "ssl_learning_rate": 0.0003,
+    "ssl_weight_decay": 0.001,
+    "inner_validation_fraction": 0.18,
+    "probe_epochs": 1,
+    "min_finetune_epochs": 1,
+    "max_finetune_epochs": 1,
+    "finetune_patience": 1,
+    "min_delta": 0.0001,
+    "finetune_batch_size": 512,
+    "encoder_learning_rate": 0.0001,
+    "head_learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "auxiliary_weight": 0.10
+  }
+}

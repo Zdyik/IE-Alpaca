@@ -1,0 +1,33 @@
+{
+  "name": "v12_human_guided_risk_chain_ssl",
+  "hypothesis": "状态级未来预测和可学习有向风险链能够在Masked表征基础上改善跨车辆风险排序",
+  "run_prefix": "V12",
+  "v11_reference_run_id": "V11ENS_20260926_090415_be888624",
+  "v3_reference_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2026,
+  "split_seed": 2026,
+  "anchors": [14, 20, 30, 40, 50, 53],
+  "methods": ["state_mae", "state_shuffle", "dynamics", "hrc_no_prior", "hrc", "hrc_shuffle"],
+  "model": {
+    "device": "auto",
+    "cpu_threads": 4,
+    "width": 32,
+    "dropout": 0.10,
+    "ssl_batch_size": 64,
+    "ssl_steps": 1500,
+    "ssl_check_every": 100,
+    "ssl_learning_rate": 0.0003,
+    "ssl_weight_decay": 0.001,
+    "inner_validation_fraction": 0.18,
+    "probe_epochs": 10,
+    "min_finetune_epochs": 15,
+    "max_finetune_epochs": 60,
+    "finetune_patience": 10,
+    "min_delta": 0.0001,
+    "finetune_batch_size": 512,
+    "encoder_learning_rate": 0.0001,
+    "head_learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "auxiliary_weight": 0.10
+  }
+}
