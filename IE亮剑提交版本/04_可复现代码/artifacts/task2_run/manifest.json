@@ -1,0 +1,10 @@
+{
+  "run_id": "T2SIMPLE_20260928_094215_652e8ce1",
+  "status": "completed",
+  "created_utc": "2026-09-28T09:42:18.284458+00:00",
+  "source_task1_run_id": "V12FINAL_20260928_005652_c09b822a",
+  "device": "cuda",
+  "vehicles": 500,
+  "alignment_gate_passed": true,
+  "warning": "Alignment measures agreement with V12 Day60 predictions, not independent ground-truth accuracy."
+}

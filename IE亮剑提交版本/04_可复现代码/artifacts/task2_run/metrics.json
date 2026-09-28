@@ -1,0 +1,47 @@
+{
+  "vehicles": 500,
+  "score_min": 40.870540285329874,
+  "score_max": 95.24296491153109,
+  "score_mean": 71.3723154706491,
+  "score_median": 72.3400032333576,
+  "grade_counts": {
+    "A": 4,
+    "B": 69,
+    "C": 216,
+    "D": 135,
+    "E": 54,
+    "U": 22
+  },
+  "mean_v12_risk_by_grade": {
+    "A": 0.24047129762518182,
+    "B": 0.2823689739695023,
+    "C": 0.3753220594708785,
+    "D": 0.6432545917118261,
+    "E": 0.8558535643213302,
+    "U": 0.31151832460732987
+  },
+  "alignment_with_v12": {
+    "pearson_risk_correlation": 0.6164807394580031,
+    "spearman_rank_correlation": 0.5985993121275739,
+    "spearman_evidence_vehicles": 0.6073650187977142,
+    "top10_risk_overlap": 0.52,
+    "top20_risk_overlap": 0.57,
+    "top30_risk_overlap": 0.68,
+    "E_minus_A_mean_probability": 0.6153822666961484,
+    "gate_passed": true,
+    "gate": {
+      "minimum_spearman": 0.55,
+      "minimum_top20_overlap": 0.5,
+      "minimum_E_minus_A_probability": 0.4
+    }
+  },
+  "dimension_points": {
+    "history": 30.0,
+    "collision": 20.0,
+    "attention": 15.0,
+    "speed": 15.0,
+    "control": 15.0,
+    "trend": 5.0
+  },
+  "interpretation": "The simple hierarchical scorecard is sufficiently aligned with V12."
+}

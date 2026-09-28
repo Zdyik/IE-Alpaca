@@ -1,0 +1,39 @@
+{
+  "name": "task2_v12_simple_hierarchical_scorecard",
+  "run_prefix": "T2SIMPLE",
+  "source_task1_run_id": "V12FINAL_20260928_005652_c09b822a",
+  "fallback_probability": 0.31151832460732987,
+  "event_weight_uniform_share": 0.5,
+  "dimension_points": {
+    "history": 30.0,
+    "collision": 20.0,
+    "attention": 15.0,
+    "speed": 15.0,
+    "control": 15.0,
+    "trend": 5.0
+  },
+  "event_risk_mix": {
+    "rate_per_1000km": 0.35,
+    "rate_per_100hours": 0.25,
+    "active_day_share": 0.2,
+    "recency": 0.2
+  },
+  "control_event_share": 0.75,
+  "control_imu_share": 0.25,
+  "grade_thresholds": {
+    "A": 90,
+    "B": 80,
+    "C": 70,
+    "D": 60
+  },
+  "alignment_gate": {
+    "minimum_spearman": 0.55,
+    "minimum_top20_overlap": 0.5,
+    "minimum_E_minus_A_probability": 0.4
+  },
+  "model": {
+    "device": "auto",
+    "batch_size": 128,
+    "cpu_threads": 4
+  }
+}

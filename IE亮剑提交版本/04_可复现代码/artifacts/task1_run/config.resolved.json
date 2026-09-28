@@ -1,0 +1,54 @@
+{
+  "name": "v12_finalize_pre_registered_selection",
+  "run_prefix": "V12FINAL",
+  "parent_run_id": "V12_20260927_134415_d7b62f3f",
+  "selected_method": "state_mae",
+  "selection_reason": "Dynamics相对State-MAE仅+0.000927且配对区间跨0；HRC未超过Dynamics。按预注册停止规则保留更简单的State-MAE。",
+  "v11_reference_run_id": "V11ENS_20260926_090415_be888624",
+  "v3_reference_run_id": "V3M0_20260921_155138_475c1ea1",
+  "seed": 2026,
+  "split_seed": 2026,
+  "anchors": [
+    14,
+    20,
+    30,
+    40,
+    50,
+    53
+  ],
+  "model": {
+    "device": "auto",
+    "cpu_threads": 4,
+    "width": 32,
+    "dropout": 0.1,
+    "ssl_batch_size": 64,
+    "ssl_steps": 1500,
+    "ssl_check_every": 100,
+    "ssl_learning_rate": 0.0003,
+    "ssl_weight_decay": 0.001,
+    "finetune_batch_size": 512,
+    "encoder_learning_rate": 0.0001,
+    "head_learning_rate": 0.001,
+    "weight_decay": 0.001,
+    "auxiliary_weight": 0.1,
+    "probe_epochs": 10,
+    "min_finetune_epochs": 15,
+    "max_finetune_epochs": 60,
+    "finetune_patience": 10,
+    "min_delta": 0.0001
+  },
+  "input_dir": "data/task1_preprocessed",
+  "results_root": "runs",
+  "resolved_device": "cuda",
+  "selected_finetune_epochs": 18,
+  "selection_evidence": {
+    "vehicles": 382,
+    "new_auc": 0.7760807745151292,
+    "prior_auc": 0.7751541681311307,
+    "delta_auc": 0.0009266063839985517,
+    "delta_auc_95pct_paired_bootstrap": [
+      -0.015106259314912055,
+      0.01884407151621135
+    ]
+  }
+}
